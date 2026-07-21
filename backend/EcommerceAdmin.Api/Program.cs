@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using EcommerceAdmin.Domain.Entities;
 using EcommerceAdmin.Application.Interfaces;
 using EcommerceAdmin.Infrastructure.Identity;
+using EcommerceAdmin.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddIdentityCore<User>(options =>
 .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // Add Authentication Middleware
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
