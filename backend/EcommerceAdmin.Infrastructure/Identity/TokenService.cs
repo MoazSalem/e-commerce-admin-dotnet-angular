@@ -11,7 +11,7 @@ namespace EcommerceAdmin.Infrastructure.Identity;
 
 public class TokenService(IConfiguration configuration) : ITokenService
 {
-    public string GenerateJwtToken(User user)
+    public string GenerateJwtToken(User user, IList<string> roles)
     {
         var jwtSettings = configuration.GetSection("JwtSettings");
         var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]!);
@@ -24,6 +24,12 @@ public class TokenService(IConfiguration configuration) : ITokenService
             new("name", user.Name),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        // Add roles as claims
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         // Create the token signature
         var key = new SymmetricSecurityKey(secretKey);

@@ -35,6 +35,8 @@ public class AuthController(UserManager<User> userManager, ITokenService tokenSe
             return BadRequest(new { Errors = errors });
         }
 
+        await userManager.AddToRoleAsync(newUser, "Customer");
+
         return Ok(new { Message = "User registered successfully." });
     }
 
@@ -53,7 +55,9 @@ public class AuthController(UserManager<User> userManager, ITokenService tokenSe
             return Unauthorized(new { Message = "Invalid email or password." });
         }
 
-        var token = tokenService.GenerateJwtToken(user);
+        var roles = await userManager.GetRolesAsync(user);
+
+        var token = tokenService.GenerateJwtToken(user, roles);
 
         var refreshToken = tokenService.GenerateRefreshToken();
         user.RefreshToken = refreshToken;
@@ -93,8 +97,10 @@ public class AuthController(UserManager<User> userManager, ITokenService tokenSe
             return BadRequest(new { Message = "Invalid access token or refresh token" });
         }
 
+        var roles = await userManager.GetRolesAsync(user);
+
         // Generate new tokens
-        var newJwtToken = tokenService.GenerateJwtToken(user);
+        var newJwtToken = tokenService.GenerateJwtToken(user, roles);
         var newRefreshToken = tokenService.GenerateRefreshToken();
 
         // Update the database with the new refresh token
