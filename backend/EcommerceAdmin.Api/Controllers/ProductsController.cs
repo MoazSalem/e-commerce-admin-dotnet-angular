@@ -8,7 +8,7 @@ namespace EcommerceAdmin.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(IProductRepository productRepository) : ControllerBase
+public class ProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository) : ControllerBase
 {
     [HttpGet]
     [AllowAnonymous]
@@ -20,7 +20,7 @@ public class ProductsController(IProductRepository productRepository) : Controll
 
     [HttpGet("{id}")]
     [AllowAnonymous]
-    public async Task<IActionResult> getByIdAsync(int id)
+    public async Task<IActionResult> GetById(int id)
     {
         var product = await productRepository.GetByIdAsync(id);
 
@@ -36,6 +36,12 @@ public class ProductsController(IProductRepository productRepository) : Controll
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        var categoryExists = await categoryRepository.ExistsAsync(dto.CategoryId);
+        if (!categoryExists)
+        {
+            return BadRequest(new { Message = $"Category with ID {dto.CategoryId} does not exist. Please create it first." });
+        }
+
         var newProduct = new Product
         {
             SKU = dto.SKU,
@@ -47,7 +53,7 @@ public class ProductsController(IProductRepository productRepository) : Controll
         var createdProduct = await productRepository.AddAsync(newProduct);
         
         // Returns 201 Created with the URL to fetch the new product
-        return CreatedAtAction(nameof(getByIdAsync), new { id = createdProduct.Id }, createdProduct);
+        return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct);
     }
 
     [HttpPut("{id}")]
