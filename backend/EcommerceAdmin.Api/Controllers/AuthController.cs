@@ -1,17 +1,15 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using EcommerceAdmin.Application.DTOs.Auth;
+using EcommerceAdmin.Application.Interfaces;
 using EcommerceAdmin.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EcommerceAdmin.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(UserManager<User> userManager, IConfiguration configuration) : ControllerBase
+public class AuthController(UserManager<User> userManager, ITokenService tokenService) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
@@ -55,46 +53,60 @@ public class AuthController(UserManager<User> userManager, IConfiguration config
             return Unauthorized(new { Message = "Invalid email or password." });
         }
 
-        var token = GenerateJwtToken(user);
+        var token = tokenService.GenerateJwtToken(user);
+
+        var refreshToken = tokenService.GenerateRefreshToken();
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+        await userManager.UpdateAsync(user);
 
         return Ok(new AuthResponse
         {
             Token = token,
+            RefreshToken = refreshToken,
             Email = user.Email!,
             Name = user.Name
         });
     }
 
-    private string GenerateJwtToken(User user)
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
-        var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]!);
-
-        // Create the payload
-        var claims = new List<Claim>
+        // Extract the user principal from the expired JWT
+        var principal = tokenService.GetPrincipalFromExpiredToken(request.Token);
+        if (principal == null)
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id),
-            new(JwtRegisteredClaimNames.Email, user.Email!),
-            new("name", user.Name),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            return BadRequest(new { Message = "Invalid access token or refresh token" });
+        }
 
-        // Create the token signature
-        var key = new SymmetricSecurityKey(secretKey);
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
+        var email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (email == null)
         {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["ExpiryInMinutes"]!)),
-            Issuer = jwtSettings["Issuer"],
-            Audience = jwtSettings["Audience"],
-            SigningCredentials = credentials
-        };
+             return BadRequest(new { Message = "Invalid access token or refresh token" });
+        }
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var user = await userManager.FindByEmailAsync(email);
+        
+        // Validate the Refresh Token against the database
+        if (user == null || user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            return BadRequest(new { Message = "Invalid access token or refresh token" });
+        }
 
-        return tokenHandler.WriteToken(token);
+        // Generate new tokens
+        var newJwtToken = tokenService.GenerateJwtToken(user);
+        var newRefreshToken = tokenService.GenerateRefreshToken();
+
+        // Update the database with the new refresh token
+        user.RefreshToken = newRefreshToken;
+        await userManager.UpdateAsync(user);
+
+        return Ok(new AuthResponse
+        {
+            Token = newJwtToken,
+            RefreshToken = newRefreshToken,
+            Email = user.Email!,
+            Name = user.Name
+        });
     }
 }
