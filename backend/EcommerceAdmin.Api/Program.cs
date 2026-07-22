@@ -26,6 +26,7 @@ builder.Services.AddIdentityCore<User>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 // Add Authentication Middleware
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
