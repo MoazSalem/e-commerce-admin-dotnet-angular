@@ -30,7 +30,7 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
     }
 
     [HttpPost]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
     {
         if (!ModelState.IsValid)
@@ -78,7 +78,7 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
     }
 
     [HttpDelete("{id}")]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var product = await productRepository.GetByIdAsync(id);

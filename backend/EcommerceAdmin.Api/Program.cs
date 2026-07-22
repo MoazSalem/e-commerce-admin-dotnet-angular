@@ -5,6 +5,7 @@ using EcommerceAdmin.Domain.Entities;
 using EcommerceAdmin.Application.Interfaces;
 using EcommerceAdmin.Infrastructure.Identity;
 using EcommerceAdmin.Infrastructure.Repositories;
+using EcommerceAdmin.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Add Authentication Middleware
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

@@ -31,8 +31,7 @@ public class CategoriesController(ICategoryRepository categoryRepository) : Cont
     }
 
     [HttpPost]
-    [AllowAnonymous]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto)
     {
         if (!ModelState.IsValid)

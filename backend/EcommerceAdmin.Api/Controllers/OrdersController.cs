@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using EcommerceAdmin.Application.DTOs;
 using EcommerceAdmin.Application.Interfaces;
-using EcommerceAdmin.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +8,7 @@ namespace EcommerceAdmin.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class OrdersController(IOrderRepository orderRepository, IProductRepository productRepository) : ControllerBase
+public class OrdersController(IOrderRepository orderRepository, IOrderService orderService) : ControllerBase
 {
     [HttpGet]
     [Authorize(Roles = "Admin")]
@@ -46,40 +45,16 @@ public class OrdersController(IOrderRepository orderRepository, IProductReposito
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var newOrder = new Order
+        try
         {
-            UserId = userId,
-            CreatedAt = DateTime.UtcNow,
-            Total = 0,
-            OrderItems = []
-        };
+            var createdOrder = await orderService.CreateOrderAsync(userId, dto);
 
-        foreach (var item in dto.Items)
-        {
-            // verify the product exists
-            var product = await productRepository.GetByIdAsync(item.ProductId);
-
-            if (product == null)
-            {
-                return BadRequest(new { Message = $"Product ID {item.ProductId} does not exist." });
-            }
-
-            var orderItem = new OrderItem
-            {
-                ProductId = product.Id,
-                Quantity = item.Quantity,
-                // use price from database for safety
-                UnitPrice = product.Price
-            };
-
-            newOrder.Total += (orderItem.Quantity * orderItem.UnitPrice);
-            newOrder.OrderItems.Add(orderItem);
-
+            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
         }
-
-        var createdOrder = await orderRepository.CreateOrderAsync(newOrder);
-
-        return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
 
     }
 }
