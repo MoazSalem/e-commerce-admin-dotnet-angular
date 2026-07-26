@@ -32,7 +32,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
         if (currentToken && refreshToken) {
           // Attempt the refresh flow
-          return http.post<AuthResponse>(apiUrl +'auth/refresh', {
+          return http.post<AuthResponse>(apiUrl +'Auth/refresh', {
             token: currentToken,
             refreshToken: refreshToken
           }).pipe(

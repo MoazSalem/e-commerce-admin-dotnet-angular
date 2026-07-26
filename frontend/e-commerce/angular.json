@@ -71,7 +71,12 @@
               "buildTarget": "e-commerce:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "ssl": true,
+            "sslCert": "./ssl/localhost.pem",
+            "sslKey": "./ssl/localhost-key.pem"
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

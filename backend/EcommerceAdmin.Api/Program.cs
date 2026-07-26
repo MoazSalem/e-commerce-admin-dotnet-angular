@@ -57,6 +57,18 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDevClient",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200", "https://localhost:4200") 
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
 var app = builder.Build();
 
 // seed database
@@ -82,6 +94,8 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
     });
 }
+
+app.UseCors("AllowAngularDevClient");
 
 app.UseAuthentication();
 app.UseAuthorization();

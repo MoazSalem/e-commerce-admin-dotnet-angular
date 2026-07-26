@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../../../core/auth/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -12,7 +14,7 @@ export class AuthComponent {
   isLoginMode = true;
   authForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     // Initialize the form with empty values and validators
     this.authForm = this.fb.group({
       name: [''], // Initially no validators because default is Login mode
@@ -41,11 +43,15 @@ export class AuthComponent {
       const payload = this.authForm.value;
       
       if (this.isLoginMode) {
-        console.log('Signing in with:', payload.email, payload.password);
-        // TODO: Call backend sign-in endpoint
+        this.authService.login(payload).subscribe({
+          next: (res) => {console.log("Login Successful")},
+          error: err => console.log(err)
+        });
       } else {
-        console.log('Registering new user:', payload);
-        // TODO: Call backend registration endpoint
+        this.authService.register(payload).subscribe({
+          next: (res) => {console.log(res), this.toggleMode()},
+          error: err => console.log(err)
+        });
       }
     }
   }

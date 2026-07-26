@@ -19,11 +19,11 @@ export class AuthService {
   public readonly currentRefreshToken = computed(() => this.currentUserState()?.refreshToken ?? null);
 
   register(credentials: RegisterRequest): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/register`, credentials);
+    return this.http.post<{ message: string }>(`${this.apiUrl}Auth/register`, credentials);
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}Auth/login`, credentials).pipe(
       tap((response) => {
         // Update storage and signal state
         localStorage.setItem('currentUser', JSON.stringify(response));
