@@ -6,7 +6,7 @@ export interface Product {
   sku: string;
   name: string;
   price: number;
-  category?: Category;
+  categoryName?: Category;
 }
 
 export interface CreateProductDto {

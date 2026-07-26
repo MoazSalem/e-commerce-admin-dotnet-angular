@@ -15,7 +15,16 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
     public async Task<IActionResult> GetAll()
     {
         var products = await productRepository.GetAllAsync();
-        return Ok(products);
+        var response = products.Select(p => new ProductResponseDto
+        {
+            Id = p.Id,
+            SKU = p.SKU,
+            Name = p.Name,
+            Price = p.Price,
+            CategoryId = p.CategoryId,
+            CategoryName = p.Category?.Title ?? "Unknown"
+        });
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
@@ -24,9 +33,19 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
     {
         var product = await productRepository.GetByIdAsync(id);
 
-        if(product == null) return NotFound("Product not foud");
+        if (product == null) return NotFound("Product not foud");
 
-        return Ok(product);
+        var response = new ProductResponseDto
+        {
+            Id = product.Id,
+            SKU = product.SKU,
+            Name = product.Name,
+            Price = product.Price,
+            CategoryId = product.CategoryId,
+            CategoryName = product.Category?.Title ?? "Unknown"
+        };
+
+        return Ok(response);
     }
 
     [HttpPost]
@@ -51,9 +70,19 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
         };
 
         var createdProduct = await productRepository.AddAsync(newProduct);
-        
+
+        var response = new ProductResponseDto
+        {
+            Id = createdProduct.Id,
+            SKU = createdProduct.SKU,
+            Name = createdProduct.Name,
+            Price = createdProduct.Price,
+            CategoryId = createdProduct.CategoryId,
+            CategoryName = "Will be populated on next fetch" 
+        };
+
         // Returns 201 Created with the URL to fetch the new product
-        return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct);
+        return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, response);
     }
 
     [HttpPut("{id}")]
@@ -83,7 +112,7 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
     {
         var product = await productRepository.GetByIdAsync(id);
 
-        if(product == null) return NotFound();
+        if (product == null) return NotFound();
 
         await productRepository.DeleteAsync(id);
 
