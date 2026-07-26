@@ -44,7 +44,7 @@ export class AuthComponent {
       
       if (this.isLoginMode) {
         this.authService.login(payload).subscribe({
-          next: (res) => {console.log("Login Successful")},
+          next: (res) => {console.log("Login Successful"), this.router.navigateByUrl('/home')},
           error: err => console.log(err)
         });
       } else {
