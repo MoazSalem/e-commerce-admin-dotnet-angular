@@ -1,0 +1,66 @@
+<div class="min-h-screen bg-[#f8fafc] font-sans">
+    <app-header></app-header>
+
+    <main class="max-w-[1440px] mx-auto px-10 py-8">
+        <div class="grid grid-cols-12 gap-8">
+
+            <!-- Left Sidebar -->
+            <aside class="col-span-3">
+                <app-filter-sidebar></app-filter-sidebar>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="col-span-9">
+                <!-- Top Controls -->
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-sm text-gray-500 font-medium">Showing 24 of 148 products</span>
+                    <div class="flex items-center space-x-2 text-sm font-medium">
+                        <span class="text-gray-500">Sort by:</span>
+                        <select
+                            class="bg-white border border-gray-200 rounded-lg py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-100 font-bold text-[#0b132b]">
+                            <option>Newest Arrivals</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Product Grid -->
+                <div class="grid grid-cols-3 gap-6 mb-10">
+                    @for (product of products; track $index) {
+                    <app-product-card [product]="product"></app-product-card>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex justify-center items-center space-x-2">
+                    <button
+                        class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <button class="w-10 h-10 rounded-lg bg-[#0b132b] text-white font-bold">1</button>
+                    <button
+                        class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 font-bold">2</button>
+                    <button
+                        class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 font-bold">3</button>
+                    <span class="px-2 text-gray-400">...</span>
+                    <button
+                        class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 font-bold">12</button>
+
+                    <button
+                        class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,8 @@
+ input:checked~.dot {
+     transform: translateX(100%);
+     background-color: #326e51;
+ }
+
+ input:checked~.block {
+     background-color: #e0f2fe;
+ }
