@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-order-summary',
@@ -11,4 +11,10 @@ export class OrderSummary {
   subtotal = input.required<number>();
   tax = input.required<number>();
   total = input.required<number>();
+
+  confirmOrder = output();
+
+  handleConfirmOrder(){
+    this.confirmOrder.emit();
+  }
 }

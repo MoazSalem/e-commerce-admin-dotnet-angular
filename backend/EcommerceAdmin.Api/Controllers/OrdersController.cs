@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using EcommerceAdmin.Application.DTOs;
+using EcommerceAdmin.Application.DTOs.Orders;
 using EcommerceAdmin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +49,22 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
         {
             var createdOrder = await orderService.CreateOrderAsync(userId, dto);
 
-            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
+            var response = new OrderResponseDto
+            {
+                Id = createdOrder.Id,
+                UserId = createdOrder.UserId,
+                Total = createdOrder.Total,
+                CreatedAt = createdOrder.CreatedAt,
+                Items = createdOrder.OrderItems.Select(oi => new OrderItemResponseDto
+                {
+                    Id = oi.Id,
+                    ProductId = oi.ProductId,
+                    Quantity = oi.Quantity,
+                    UnitPrice = oi.UnitPrice
+                }).ToList()
+            };
+
+            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, response);
         }
         catch (Exception ex)
         {

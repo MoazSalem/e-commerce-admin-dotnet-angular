@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EcommerceAdmin.Application.DTOs;
+namespace EcommerceAdmin.Application.DTOs.Orders;
 
 public class CreateOrderDto
 {

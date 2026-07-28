@@ -23,9 +23,9 @@
         <span class="text-2xl font-extrabold text-[#0b132b]">{{ total() | currency }}</span>
     </div>
     <!-- Checkout Action -->
-    <button
+    <button (click)="handleConfirmOrder()"
         class="w-full bg-[#326e51] text-white py-3.5 rounded-lg font-bold flex items-center justify-center hover:bg-[#25523c] transition-colors mb-4">
-        Proceed to Checkout
+        Confirm Order
         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
         </svg>

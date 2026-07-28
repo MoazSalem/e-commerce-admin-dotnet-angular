@@ -1,4 +1,4 @@
-using EcommerceAdmin.Application.DTOs;
+using EcommerceAdmin.Application.DTOs.Orders;
 using EcommerceAdmin.Domain.Entities;
 
 namespace EcommerceAdmin.Application.Interfaces;

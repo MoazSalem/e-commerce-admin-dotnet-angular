@@ -15,16 +15,16 @@ export class CartItemCard {
   removeItem = output<number>();
 
   onIncrease() {
-    this.updateQuantity.emit({ id: this.item().id });
+    this.updateQuantity.emit({ id: this.item().productId });
   }
 
   onDecrease() {
     if (this.item().quantity > 1) {
-      this.updateQuantity.emit({ id: this.item().id, decrease: true });
+      this.updateQuantity.emit({ id: this.item().productId, decrease: true });
     }
   }
 
   onRemove() {
-    this.removeItem.emit(this.item().id);
+    this.removeItem.emit(this.item().productId);
   }
 }

@@ -4,6 +4,7 @@ import { OrderSummary } from './components/order-summary/order-summary';
 import { CartItem } from '../../shared/models/cartItem';
 import { HeaderComponent } from "../../layout/header-component/header-component";
 import { CartService } from '../../core/services/cart-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -13,9 +14,10 @@ import { CartService } from '../../core/services/cart-service';
 })
 export class Cart {
   private cartService = inject(CartService);
+  private router = inject(Router);
   cartItems = signal<CartItem[]>([]);
 
-  constructor(){
+  constructor() {
     this.cartItems.set(this.cartService.cartItems())
   }
 
@@ -26,7 +28,7 @@ export class Cart {
 
   taxAmount = computed(() => {
     // Assuming a static tax rate for demonstration
-    return this.subtotal() * 0.14; 
+    return this.subtotal() * 0.14;
   });
 
   finalTotal = computed(() => {
@@ -34,7 +36,7 @@ export class Cart {
   });
 
   // Event Handlers
-  handleUpdateQuantity(event: { id: number, decrease?: boolean}) {
+  handleUpdateQuantity(event: { id: number, decrease?: boolean }) {
     this.cartService.changeQuantity(event.id, event.decrease ?? false);
     this.cartItems.set(this.cartService.cartItems());
   }
@@ -42,6 +44,18 @@ export class Cart {
   handleRemoveItem(id: number) {
     this.cartService.removeFromCart(id);
     this.cartItems.set(this.cartService.cartItems())
+  }
+
+  handleConfirmOrder() {
+    this.cartService.completeOrder().subscribe({
+      next: (response) => {
+        console.log('Order complete, redirecting...');
+        this.router.navigateByUrl("/home")
+      },
+      error: (err) => {
+        console.error('Checkout failed:', err);
+      }
+    });
   }
 
 

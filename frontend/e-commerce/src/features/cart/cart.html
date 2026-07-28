@@ -1,44 +1,41 @@
 <app-header-component hideCart></app-header-component>
 <div class="min-h-screen bg-[#f8fafc] font-sans">
 
-      <main class="max-w-360 mx-auto px-10 py-6">
-        
-        <!-- Page Titles -->
-        <div class="mb-5">
-          <h1 class="text-4xl font-extrabold text-[#0b132b] tracking-tight mb-2">Your Shopping Bag</h1>
-          <p class="text-gray-600 font-medium">Review your selection and proceed to checkout.</p>
-        </div>
+  <main class="max-w-360 mx-auto px-10 py-6">
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          
-          <!-- Left Column: Cart Items -->
-          <div class="lg:col-span-8">
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-              @for (item of cartItems(); track item.id) {
-                <app-cart-item-card 
-                  [item]="item" 
-                  (updateQuantity)="handleUpdateQuantity($event)"
-                  (removeItem)="handleRemoveItem($event)">
-                </app-cart-item-card>
-              } @empty {
-                <div class="text-center py-12 text-gray-500">
-                  Your cart is currently empty.
-                </div>
-              }
-            </div>
-          </div>
-
-          <!-- Right Column: Order Summary -->
-          <div class="lg:col-span-4">
-            <div class="sticky top-24">
-              <app-order-summary 
-                [subtotal]="subtotal()" 
-                [tax]="taxAmount()" 
-                [total]="finalTotal()">
-              </app-order-summary>
-            </div>
-          </div>
-
-        </div>
-      </main>
+    <!-- Page Titles -->
+    <div class="mb-5">
+      <h1 class="text-4xl font-extrabold text-[#0b132b] tracking-tight mb-2">Your Shopping Bag</h1>
+      <p class="text-gray-600 font-medium">Review your selection and proceed to checkout.</p>
     </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+      <!-- Left Column: Cart Items -->
+      <div class="lg:col-span-8">
+        <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+          @for (item of cartItems(); track item.productId) {
+          <app-cart-item-card [item]="item" (updateQuantity)="handleUpdateQuantity($event)"
+            (removeItem)="handleRemoveItem($event)">
+          </app-cart-item-card>
+          } @empty {
+          <div class="text-center py-12 text-gray-500">
+            Your cart is currently empty.
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Column: Order Summary -->
+      <div class="lg:col-span-4">
+        <div class="sticky top-24">
+          <app-order-summary [subtotal]="subtotal()" [tax]="taxAmount()" [total]="finalTotal()"
+            (confirmOrder)="handleConfirmOrder()">
+
+          </app-order-summary>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

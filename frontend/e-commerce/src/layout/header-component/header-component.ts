@@ -16,7 +16,6 @@ export class HeaderComponent {
   hideCart = input(false, { transform: booleanAttribute });
 
   toggleDropdown() {
-    console.log(this.router.url === '/cart')
     this.isDropdownOpen.update(isOpen => !isOpen);
   }
 

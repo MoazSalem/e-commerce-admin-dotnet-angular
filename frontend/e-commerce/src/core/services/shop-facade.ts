@@ -20,14 +20,14 @@ export class ShopFacade {
 
   public addToCart(product: Product): void {
     // Check if item is already in cart to increase quantity instead of duplicating
-    const existingItem = this.cartService.cartItems().find(item => item.id === product.id);
+    const existingItem = this.cartService.cartItems().find(item => item.productId === product.id);
     
     if (existingItem) {
-      this.cartService.changeQuantity(existingItem.id);
+      this.cartService.changeQuantity(existingItem.productId);
     } else {
       // Map the Product to a new CartItem
       const newItem: CartItem = {
-        id: product.id,
+        productId: product.id,
         name: product.name,
         unitPrice: product.price,
         quantity: 1

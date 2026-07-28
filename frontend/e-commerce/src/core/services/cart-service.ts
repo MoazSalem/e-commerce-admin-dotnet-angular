@@ -23,8 +23,8 @@ export class CartService {
   }
 
   completeOrder() {
-    return this.http.post(this.apiUrl + '/Orders', {
-      Items: this.cartItems()
+    return this.http.post(this.apiUrl + 'Orders', {
+      items: this.cartItems()
     }).pipe(
       tap(
         order => {
@@ -35,20 +35,20 @@ export class CartService {
   }
 
   addItemToCart(item: CartItem) {
-    console.log(item.id + " Added to cart")
+    console.log(item.productId + " Added to cart")
     this.cartItems.update(ci => [...ci, item]);
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems()));
   }
 
   removeFromCart(id: number) {
-    this.cartItems.update(items => items.filter(ci => ci.id != id))
+    this.cartItems.update(items => items.filter(ci => ci.productId != id))
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems()));
   }
 
   changeQuantity(id: number, decrease: boolean = false) {
     this.cartItems.update(items =>
       items.map(ci =>
-        ci.id === id
+        ci.productId === id
           ? { ...ci, quantity: decrease ? (ci.quantity || 1) - 1 : (ci.quantity || 1) + 1 }
           : ci
       )
