@@ -1,0 +1,76 @@
+<app-header-component></app-header-component>
+
+<div class="min-h-screen bg-[#f8fafc] font-sans py-12 px-10">
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Page Header -->
+        <div class="mb-10">
+            <h1 class="text-3xl font-extrabold text-[#0b132b] tracking-tight mb-2">My Orders</h1>
+            <p class="text-gray-500 font-medium">Track, manage and view history of all your purchases.</p>
+        </div>
+
+        <!-- Orders List -->
+        <div class="space-y-6 mb-12">
+            @for (order of this.cartService.pastOrdersResource.value() ?? []; track order.id) {
+            <div class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm">
+
+                <!-- Order ID Section -->
+                <div class="mb-5">
+                    <p class="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1">Order ID</p>
+                    <p class="text-xl font-bold text-[#0b132b]">O-{{ order.id }}</p>
+                </div>
+
+                <!-- Divider -->
+                <div class="border-t border-gray-200 pt-5 flex justify-between items-start gap-8">
+
+                    <!-- Items Summary -->
+                    <div class="flex-1">
+                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1">Order Items</p>
+                        <p>@for (item of order.items; track $index) {
+                            {{item.name}} ({{item.unitPrice | currency}})@if($index < order.items.length - 1){,} }</p>
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div class="text-right whitespace-nowrap">
+                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1">Total Amount</p>
+                        <p class="text-2xl font-extrabold text-[#0b132b]">{{ order.total | currency }}</p>
+                    </div>
+
+                </div>
+            </div>
+            } @empty {
+            <p class="text-2xl">No orders have been placed yet</p>
+            }
+        </div>
+
+        @if (this.cartService.pastOrdersResource.value()?.length ?? 0 > 0) {
+        <!-- Pagination -->
+        <div class="flex justify-center items-center space-x-2">
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors cursor-not-allowed"
+                disabled>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+
+            <button class="w-10 h-10 rounded-lg bg-[#0b132b] text-white font-bold shadow-sm">1</button>
+            <button
+                class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 font-bold transition-colors">2</button>
+            <button
+                class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 font-bold transition-colors">3</button>
+            <span class="px-2 text-gray-400 font-bold tracking-widest">...</span>
+            <button
+                class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 font-bold transition-colors">12</button>
+
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+        }
+
+    </div>
+</div>

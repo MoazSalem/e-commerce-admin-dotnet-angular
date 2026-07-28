@@ -36,6 +36,38 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
         return Ok(order);
     }
 
+    [HttpGet("my-orders")]
+    [Authorize]
+    public async Task<IActionResult> GetMyOrders()
+    {
+        // Get the User ID securely from the token the user sent
+        var currentUserId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? 
+                            User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+
+        if (string.IsNullOrEmpty(currentUserId))
+            return Unauthorized();
+
+        var orders = await orderRepository.GetByUserIdAsync(currentUserId);
+
+        var response = orders.Select(o => new OrderResponseDto
+        {
+            Id = o.Id,
+            UserId = o.UserId,
+            Total = o.Total,
+            CreatedAt = o.CreatedAt,
+            Items = [.. o.OrderItems.Select(oi => new OrderItemResponseDto
+            {
+                Id = oi.Id,
+                Name = oi.Product.Name,
+                ProductId = oi.ProductId,
+                Quantity = oi.Quantity,
+                UnitPrice = oi.UnitPrice
+            })]
+        }).ToList();
+
+        return Ok(response);
+    }
+
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDto dto)
@@ -55,13 +87,14 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
                 UserId = createdOrder.UserId,
                 Total = createdOrder.Total,
                 CreatedAt = createdOrder.CreatedAt,
-                Items = createdOrder.OrderItems.Select(oi => new OrderItemResponseDto
+                Items = [.. createdOrder.OrderItems.Select(oi => new OrderItemResponseDto
                 {
                     Id = oi.Id,
+                    Name = oi.Product.Name,
                     ProductId = oi.ProductId,
                     Quantity = oi.Quantity,
                     UnitPrice = oi.UnitPrice
-                }).ToList()
+                })]
             };
 
             return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, response);

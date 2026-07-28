@@ -26,6 +26,7 @@
         </div>
       </div>
 
+      @if (cartItems().length > 0) {
       <!-- Right Column: Order Summary -->
       <div class="lg:col-span-4">
         <div class="sticky top-24">
@@ -35,6 +36,7 @@
           </app-order-summary>
         </div>
       </div>
+      }
 
     </div>
   </main>

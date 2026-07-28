@@ -4,3 +4,10 @@ export interface CartItem {
   unitPrice: number;
   quantity: number;
 }
+
+export interface Order {
+  id: string;
+  total: number;
+  items: CartItem[];
+  createdAt: string;
+}

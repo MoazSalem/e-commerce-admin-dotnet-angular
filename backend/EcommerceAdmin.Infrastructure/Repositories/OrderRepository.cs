@@ -20,6 +20,16 @@ public class OrderRepository(AppDbContext context) : IOrderRepository
         .Include(o => o.User).OrderByDescending(o => o.CreatedAt).ToListAsync();
     }
 
+    public async Task<IEnumerable<Order>> GetByUserIdAsync(string userId)
+    {
+        return await context.Orders
+        .Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+        .Where(o => o.UserId == userId)
+        .OrderByDescending(o => o.CreatedAt)
+        .ToListAsync();
+    }
+
+
     public async Task<Order?> GetOrderByIdAsync(int id)
     {
         return await context.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product)

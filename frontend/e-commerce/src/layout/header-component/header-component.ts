@@ -40,8 +40,6 @@ export class HeaderComponent {
 
     const lastName = nameParts.slice(1).join(' ') || "";
 
-    console.log(firstName+"+"+lastName)
-
     // Return the result as an object
     return firstName+"+"+lastName;
   }

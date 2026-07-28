@@ -8,9 +8,6 @@ import { tap } from 'rxjs';
   providedIn: 'root',
 })
 export class CartService {
-  increaseQuantity(existingItem: CartItem) {
-    throw new Error('Method not implemented.');
-  }
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
   public cartItems = signal<CartItem[]>([]);
@@ -55,4 +52,5 @@ export class CartService {
     );
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems()));
   }
+
 }
