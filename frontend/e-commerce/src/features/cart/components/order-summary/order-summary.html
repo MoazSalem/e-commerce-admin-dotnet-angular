@@ -1,0 +1,49 @@
+<div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+    <h2 class="text-2xl font-bold text-[#0b132b] mb-6">Order Summary</h2>
+
+    <!-- Breakdown -->
+    <div class="space-y-4 mb-6">
+        <div class="flex justify-between text-gray-600">
+            <span>Subtotal</span>
+            <span class="text-[#0b132b] font-medium">{{ subtotal() | currency }}</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Shipping</span>
+            <span class="text-[#326e51] font-semibold">Free</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Estimated Tax</span>
+            <span class="text-[#0b132b] font-medium">{{ tax() | currency }}</span>
+        </div>
+    </div>
+
+    <!-- Total -->
+    <div class="border-t border-gray-200 pt-6 mb-8 flex justify-between items-end">
+        <span class="text-xl font-bold text-[#0b132b]">Total</span>
+        <span class="text-2xl font-extrabold text-[#0b132b]">{{ total() | currency }}</span>
+    </div>
+
+    <!-- Promo Code -->
+    <div class="mb-8">
+        <label class="block text-[11px] font-bold text-[#0b132b] mb-2">Promo Code</label>
+        <div class="flex space-x-2">
+            <input type="text" placeholder="Enter code"
+                class="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 placeholder-gray-400 bg-gray-50/50">
+            <button
+                class="bg-[#0b132b] text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
+                Apply
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Action -->
+    <button
+        class="w-full bg-[#326e51] text-white py-3.5 rounded-lg font-bold flex items-center justify-center hover:bg-[#25523c] transition-colors mb-4">
+        Proceed to Checkout
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+    </button>
+
+    <p class="text-center text-xs text-gray-500 font-medium">Free shipping on orders over $100</p>
+</div>
