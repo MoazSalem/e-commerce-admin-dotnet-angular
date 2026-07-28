@@ -36,15 +36,15 @@
             <!-- Avatar Trigger -->
             <button (click)="toggleDropdown()"
                 class="focus:outline-none flex items-center rounded-full ring-2 ring-transparent hover:ring-blue-100 transition-all">
-                <img src="https://ui-avatars.com/api/?name=Jane+Doe&background=e2e8f0" alt="Profile"
+                <img src="https://ui-avatars.com/api/?name={{getNameForAvatar(user.name)}}&background=e2e8f0" alt="Profile"
                     class="w-9 h-9 rounded-full border border-gray-200">
             </button>
 
             @if (isDropdownOpen()) {
             <div class="absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
                 <div class="px-4 py-2 border-b border-gray-100 mb-1">
-                    <p class="text-sm font-semibold text-gray-900">Jane Doe</p>
-                    <p class="text-xs text-gray-500 truncate">jane.doe@example.com</p>
+                    <p class="text-sm font-semibold text-gray-900">{{user.name}}</p>
+                    <p class="text-xs text-gray-500 truncate">{{user.email}}</p>
                 </div>
 
                 <button (click)="logout()"
