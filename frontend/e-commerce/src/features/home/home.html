@@ -24,14 +24,14 @@
                     </div>
                 </div>
 
-                @if (productService.productsResource.isLoading()) {
+                @if (shopfacade.productsResource.isLoading()) {
 
                 <div class="loading-state">
                     <div class="spinner"></div>
                     <p>Loading products...</p>
                 </div>
 
-                } @else if (productService.productsResource.error()) {
+                } @else if (shopfacade.productsResource.error()) {
 
                 <div class="error-state">
                     <p>Failed to load products. Please try again.</p>
@@ -39,9 +39,9 @@
 
                 } @else {
                 <!-- Product Grid -->
-                <div class="grid grid-cols-3 gap-6 mb-10">
-                    @for (product of productService.productsResource.value(); track $index) {
-                    <app-product-card [product]="product"></app-product-card>
+                <div class="grid grid-cols-3 gap-6 mb-10 min-h-100">
+                    @for (product of shopfacade.productsResource.value(); track $index) {
+                    <app-product-card [product]="product" (addToCart)="shopfacade.addToCart($event)"></app-product-card>
                     }
                 </div>
                 }

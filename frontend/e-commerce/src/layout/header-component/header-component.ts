@@ -1,6 +1,7 @@
 import { booleanAttribute, Component, inject, input, signal } from '@angular/core';
 import { AuthService } from '../../core/auth/auth-service';
 import { Router } from '@angular/router';
+import { CartService } from '../../core/services/cart-service';
 
 @Component({
   selector: 'app-header-component',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  protected cart = inject(CartService);
   isDropdownOpen = signal(false);
   hideCart = input(false, { transform: booleanAttribute });
 

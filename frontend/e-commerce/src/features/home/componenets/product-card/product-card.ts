@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../../../shared/models/product';
 
@@ -9,5 +9,6 @@ import { Product } from '../../../../shared/models/product';
   templateUrl: './product-card.html',
 })
 export class ProductCardComponent {
-  @Input() product: any;
+  public product = input.required<Product>();
+  public addToCart = output<Product>();
 }

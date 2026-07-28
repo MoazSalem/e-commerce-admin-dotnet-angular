@@ -11,16 +11,16 @@ import { CurrencyPipe } from '@angular/common';
 export class CartItemCard {
   item = input.required<CartItem>();
 
-  updateQuantity = output<{ id: number, newQuantity: number }>();
+  updateQuantity = output<{ id: number, decrease?: boolean }>();
   removeItem = output<number>();
 
   onIncrease() {
-    this.updateQuantity.emit({ id: this.item().id, newQuantity: this.item().quantity + 1 });
+    this.updateQuantity.emit({ id: this.item().id });
   }
 
   onDecrease() {
     if (this.item().quantity > 1) {
-      this.updateQuantity.emit({ id: this.item().id, newQuantity: this.item().quantity - 1 });
+      this.updateQuantity.emit({ id: this.item().id, decrease: true });
     }
   }
 
