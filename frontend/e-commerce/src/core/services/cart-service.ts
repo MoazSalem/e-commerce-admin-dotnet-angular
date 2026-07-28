@@ -3,17 +3,19 @@ import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { CartItem } from '../../shared/models/cartItem';
 import { tap } from 'rxjs';
+import { AuthService } from '../auth/auth-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
   private readonly http = inject(HttpClient);
+  private authService = inject(AuthService);
   private readonly apiUrl = environment.apiUrl;
   public cartItems = signal<CartItem[]>([]);
-  public totalCartItems = computed(() => 
+  public totalCartItems = computed(() =>
     this.cartItems().reduce((total, item) => total + (item.quantity || 1), 0)
-  ); 
+  );
 
   constructor() {
     this.cartItems.set(JSON.parse(localStorage.getItem('cartItems') ?? "[]"));
@@ -25,7 +27,7 @@ export class CartService {
     }).pipe(
       tap(
         order => {
-          console.log("Ordered Sucessfully:" + order), this.cartItems.set([]), localStorage.setItem('cartItems', JSON.stringify(this.cartItems()))
+          console.log("Ordered Sucessfully:" + order), this.cartItems.set([]), this.updateLocalStorageCart(true)
         }
       )
     )
@@ -34,12 +36,12 @@ export class CartService {
   addItemToCart(item: CartItem) {
     console.log(item.productId + " Added to cart")
     this.cartItems.update(ci => [...ci, item]);
-    localStorage.setItem('cartItems', JSON.stringify(this.cartItems()));
+    this.updateLocalStorageCart();
   }
 
   removeFromCart(id: number) {
     this.cartItems.update(items => items.filter(ci => ci.productId != id))
-    localStorage.setItem('cartItems', JSON.stringify(this.cartItems()));
+    this.updateLocalStorageCart();
   }
 
   changeQuantity(id: number, decrease: boolean = false) {
@@ -50,7 +52,11 @@ export class CartService {
           : ci
       )
     );
-    localStorage.setItem('cartItems', JSON.stringify(this.cartItems()));
+    this.updateLocalStorageCart();
+  }
+
+  updateLocalStorageCart(remove: boolean = false) {
+    remove ? localStorage.removeItem('cartItems' + "-" + this.authService.currentUser()?.email) : localStorage.setItem('cartItems' + "-" + this.authService.currentUser()?.email, JSON.stringify(this.cartItems()));
   }
 
 }
