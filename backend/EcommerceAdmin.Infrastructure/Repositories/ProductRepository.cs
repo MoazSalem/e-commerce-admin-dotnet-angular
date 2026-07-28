@@ -29,6 +29,22 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         return await context.Products.Include(p => p.Category).ToListAsync();
     }
 
+        public async Task<(IEnumerable<Product> Items, int TotalCount)> GetAllPaginatedAsync(int pageNumber, int pageSize)
+    {
+        var query = context.Products.Include(p => p.Category).AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(p => p.Id)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+
+
     public async Task<Product?> GetByIdAsync(int id)
     {
         return await context.Products

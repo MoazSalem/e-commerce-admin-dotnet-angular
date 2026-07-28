@@ -18,6 +18,10 @@ export class ShopFacade {
     this.productService.reloadProducts();
   }
 
+  public changePage(page: number): void {
+    this.productService.changePage(page);
+  }
+
   public addToCart(product: Product): void {
     // Check if item is already in cart to increase quantity instead of duplicating
     const existingItem = this.cartService.cartItems().find(item => item.productId === product.id);

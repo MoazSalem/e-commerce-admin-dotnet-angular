@@ -15,3 +15,8 @@ export interface CreateProductDto {
   price: number;
   categoryId: number;
 }
+
+export class ProductParams {
+    pageNumber = 1;
+    pageSize = 10;
+}

@@ -1,0 +1,36 @@
+@if (metadata().totalPages > 1) {
+<div class="flex justify-center items-center space-x-2 my-4">
+
+    <!-- Previous Button -->
+    <button [disabled]="!metadata().hasPreviousPage" (click)="onPrev()"
+        class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+    </button>
+
+    @for (page of visiblePages(); track $index) {
+    @if (page === '...') {
+    <!-- Ellipsis -->
+    <span class="px-2 text-gray-400">...</span>
+    } @else {
+    <!-- Page Number Button -->
+    <button (click)="onPageClick(page)"
+        [class]="page === metadata().pageNumber 
+                ? 'w-10 h-10 rounded-lg bg-[#0b132b] text-white font-bold transition-colors' 
+                : 'w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 font-bold transition-colors'">
+        {{ page }}
+    </button>
+    }
+    }
+
+    <!-- Next Button -->
+    <button [disabled]="!metadata().hasNextPage" (click)="onNext()"
+        class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+    </button>
+
+</div>
+}

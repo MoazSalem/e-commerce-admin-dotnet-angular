@@ -10,7 +10,7 @@ namespace EcommerceAdmin.Api.Controllers;
 [Route("api/[controller]")]
 public class ProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("all")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll()
     {
@@ -24,6 +24,33 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
             CategoryId = p.CategoryId,
             CategoryName = p.Category?.Title ?? "Unknown"
         });
+        return Ok(response);
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
+    {
+        var (products, totalCount) = await productRepository.GetAllPaginatedAsync(
+            paginationParams.PageNumber, 
+            paginationParams.PageSize);
+        
+        var productDtos = products.Select(p => new ProductResponseDto
+        {
+            Id = p.Id,
+            SKU = p.SKU,
+            Name = p.Name,
+            Price = p.Price,
+            CategoryId = p.CategoryId,
+            CategoryName = p.Category?.Title ?? "Unknown" 
+        }).ToList();
+
+        var response = new PagedResult<ProductResponseDto>(
+            productDtos, 
+            totalCount, 
+            paginationParams.PageNumber, 
+            paginationParams.PageSize);
+
         return Ok(response);
     }
 
