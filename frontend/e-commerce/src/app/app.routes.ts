@@ -4,6 +4,7 @@ import { HomeComponent } from '../features/home/home';
 import { guestGuard } from '../core/guards/guest-guard';
 import { authGuard } from '../core/guards/auth-guard';
 import { Cart } from '../features/cart/cart';
+import { OrderSuccessComponent } from '../features/order-success/order-success';
 
 export const routes: Routes = [
     { path: '', component: AuthComponent, canActivate: [guestGuard], data: { hideHeader: true } },
@@ -12,6 +13,9 @@ export const routes: Routes = [
     },
     {
         path: 'cart', component: Cart, canActivate: [authGuard]
+    },
+    {
+        path: 'order-success', component: OrderSuccessComponent, canActivate: [authGuard]
     },
     {
         path: '**',

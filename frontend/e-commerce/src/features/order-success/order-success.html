@@ -1,0 +1,51 @@
+<app-header-component></app-header-component>
+
+<div class="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center px-4 py-12 font-sans">
+
+    <!-- Success Icon -->
+    <div class="w-24 h-24 bg-[#a7f3d0] rounded-full flex items-center justify-center mb-8">
+        <div class="w-10 h-10 bg-[#407455] rounded-full flex items-center justify-center shadow-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Heading & Message -->
+    <h1 class="text-4xl md:text-5xl font-extrabold text-[#0b132b] mb-4 text-center tracking-tight">
+        Thank you for your order!
+    </h1>
+    <p class="text-gray-500 text-center max-w-lg mx-auto mb-12 text-lg">
+        Your payment was successful and your order is now being processed by our fulfillment team.
+    </p>
+
+    <!-- Order Details Cards -->
+    <div class="w-full max-w-2xl flex flex-col sm:flex-row gap-4">
+
+        <!-- Order Number Card -->
+        <div class="flex-1 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <p class="text-[11px] font-bold text-gray-500 tracking-widest uppercase mb-2">Order Number</p>
+            <p class="text-2xl font-extrabold text-[#0b132b]">{{ orderNumber() }}</p>
+        </div>
+
+        <!-- Estimated Delivery Card -->
+        <div class="flex-1 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <p class="text-[11px] font-bold text-gray-500 tracking-widest uppercase mb-2">Estimated Delivery</p>
+            <div class="flex items-center text-2xl font-extrabold text-[#0b132b]">
+                <svg class="w-8 h-8 text-[#407455] mr-4" width="32" height="32"
+                    viewBox="0 0 24 24"><!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
+                    <path fill="currentColor"
+                        d="M3.5 13v-3H1l3.5-5v3H7zm3.3 7q-1.25 0-2.125-.875T3.8 17q0-.625.288-1.175t.787-.95L10.85 6h-4.3l.425-2H18l-.925 4H20l3 4l-1 5h-2q0 1.25-.875 2.125T17 20t-2.125-.875T14 17H9.8q0 1.25-.875 2.125T6.8 20m.2-2q.425 0 .713-.288T8 17t-.288-.712T7 16t-.712.288T6 17t.288.713T7 18m10 0q.425 0 .713-.288T18 17t-.288-.712T17 16t-.712.288T16 17t.288.713T17 18m-1.075-5h4.825l.1-.525L19 10h-2.375z" />
+                </svg>
+                {{ estimatedDelivery() }}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Continue Shopping Button -->
+    <a routerLink="/home"
+        class="inline-flex items-center justify-center mt-20 bg-[#0b132b] text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-colors shadow-sm">
+        Continue Shopping
+    </a>
+</div>

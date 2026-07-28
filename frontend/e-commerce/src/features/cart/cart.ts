@@ -50,7 +50,7 @@ export class Cart {
     this.cartService.completeOrder().subscribe({
       next: (response) => {
         console.log('Order complete, redirecting...');
-        this.router.navigateByUrl("/home")
+        this.router.navigateByUrl("/order-success")
       },
       error: (err) => {
         console.error('Checkout failed:', err);
