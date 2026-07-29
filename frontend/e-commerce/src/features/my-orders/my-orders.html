@@ -9,9 +9,10 @@
             <p class="text-gray-500 font-medium">Track, manage and view history of all your purchases.</p>
         </div>
 
-        <!-- Orders List -->
+        @if (this.ordersService.pastOrdersResource.value(); as PaginatedResults) {
+            <!-- Orders List -->
         <div class="space-y-6 mb-12">
-            @for (order of this.cartService.pastOrdersResource.value() ?? []; track order.id) {
+            @for (order of  PaginatedResults.items; track order.id) {
             <div class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm">
 
                 <!-- Order ID Section -->
@@ -43,34 +44,8 @@
             }
         </div>
 
-        @if (this.cartService.pastOrdersResource.value()?.length ?? 0 > 0) {
-        <!-- Pagination -->
-        <div class="flex justify-center items-center space-x-2">
-            <button
-                class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors cursor-not-allowed"
-                disabled>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </button>
-
-            <button class="w-10 h-10 rounded-lg bg-[#0b132b] text-white font-bold shadow-sm">1</button>
-            <button
-                class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 font-bold transition-colors">2</button>
-            <button
-                class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 font-bold transition-colors">3</button>
-            <span class="px-2 text-gray-400 font-bold tracking-widest">...</span>
-            <button
-                class="w-10 h-10 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 font-bold transition-colors">12</button>
-
-            <button
-                class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </button>
-        </div>
+        <app-pagination-component [metadata]="PaginatedResults" (pageChange)="ordersService.changePage( $event)"></app-pagination-component>
         }
-
+        
     </div>
 </div>

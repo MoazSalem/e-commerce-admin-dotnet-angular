@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using EcommerceAdmin.Application.DTOs;
 using EcommerceAdmin.Application.DTOs.Orders;
 using EcommerceAdmin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -38,10 +39,53 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
 
     [HttpGet("my-orders")]
     [Authorize]
+    public async Task<IActionResult> GetMyOrders([FromQuery] PaginationParams paginationParams)
+    {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
+                            User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+
+        if (string.IsNullOrEmpty(currentUserId))
+            return Unauthorized();
+
+        // Fetch paginated orders and total count from the repository
+        var (orders, totalCount) = await orderRepository.GetByUserIdPaginatedAsync(
+            currentUserId, 
+            paginationParams.PageNumber, 
+            paginationParams.PageSize);
+
+        // Map to DTOs
+        var orderDtos = orders.Select(o => new OrderResponseDto
+        {
+            Id = o.Id,
+            UserId = o.UserId,
+            Total = o.Total,
+            CreatedAt = o.CreatedAt,
+            Items = o.OrderItems.Select(oi => new OrderItemResponseDto
+            {
+                Id = oi.Id,
+                ProductId = oi.ProductId,
+                Name = oi.Product.Name,
+                Quantity = oi.Quantity,
+                UnitPrice = oi.UnitPrice
+            }).ToList()
+        }).ToList(); // Convert to List for the PagedResult
+
+        // Wrap everything in the generic PagedResult
+        var response = new PagedResult<OrderResponseDto>(
+            orderDtos, 
+            totalCount, 
+            paginationParams.PageNumber, 
+            paginationParams.PageSize);
+
+        return Ok(response);
+    }
+
+    [HttpGet("my-orders/all")]
+    [Authorize]
     public async Task<IActionResult> GetMyOrders()
     {
         // Get the User ID securely from the token the user sent
-        var currentUserId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? 
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
                             User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
 
         if (string.IsNullOrEmpty(currentUserId))

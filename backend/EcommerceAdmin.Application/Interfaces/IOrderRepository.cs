@@ -10,4 +10,5 @@ public interface IOrderRepository
     Task<Order> CreateOrderAsync(Order order);
 
     Task<IEnumerable<Order>> GetByUserIdAsync(string userId);
+    Task<(IEnumerable<Order> Items, int TotalCount)> GetByUserIdPaginatedAsync(string userId, int pageNumber, int pageSize);
 }
