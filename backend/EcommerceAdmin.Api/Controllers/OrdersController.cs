@@ -4,6 +4,7 @@ using EcommerceAdmin.Application.DTOs.Orders;
 using EcommerceAdmin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using EcommerceAdmin.Application.Common.Mappings;
 
 namespace EcommerceAdmin.Api.Controllers;
 
@@ -34,7 +35,9 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
             return Forbid();
         }
 
-        return Ok(order);
+        var response = order.ToDto();
+
+        return Ok(response);
     }
 
     [HttpGet("my-orders")]
@@ -53,22 +56,7 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
             paginationParams.PageNumber, 
             paginationParams.PageSize);
 
-        // Map to DTOs
-        var orderDtos = orders.Select(o => new OrderResponseDto
-        {
-            Id = o.Id,
-            UserId = o.UserId,
-            Total = o.Total,
-            CreatedAt = o.CreatedAt,
-            Items = o.OrderItems.Select(oi => new OrderItemResponseDto
-            {
-                Id = oi.Id,
-                ProductId = oi.ProductId,
-                Name = oi.Product.Name,
-                Quantity = oi.Quantity,
-                UnitPrice = oi.UnitPrice
-            }).ToList()
-        }).ToList(); // Convert to List for the PagedResult
+        var orderDtos = orders.Select(o => o.ToDto()).ToList();
 
         // Wrap everything in the generic PagedResult
         var response = new PagedResult<OrderResponseDto>(
@@ -93,23 +81,9 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
 
         var orders = await orderRepository.GetByUserIdAsync(currentUserId);
 
-        var response = orders.Select(o => new OrderResponseDto
-        {
-            Id = o.Id,
-            UserId = o.UserId,
-            Total = o.Total,
-            CreatedAt = o.CreatedAt,
-            Items = [.. o.OrderItems.Select(oi => new OrderItemResponseDto
-            {
-                Id = oi.Id,
-                Name = oi.Product.Name,
-                ProductId = oi.ProductId,
-                Quantity = oi.Quantity,
-                UnitPrice = oi.UnitPrice
-            })]
-        }).ToList();
+        var orderDtos = orders.Select(o => o.ToDto()).ToList();
 
-        return Ok(response);
+        return Ok(orderDtos);
     }
 
     [HttpPost]
@@ -125,21 +99,7 @@ public class OrdersController(IOrderRepository orderRepository, IOrderService or
         {
             var createdOrder = await orderService.CreateOrderAsync(userId, dto);
 
-            var response = new OrderResponseDto
-            {
-                Id = createdOrder.Id,
-                UserId = createdOrder.UserId,
-                Total = createdOrder.Total,
-                CreatedAt = createdOrder.CreatedAt,
-                Items = [.. createdOrder.OrderItems.Select(oi => new OrderItemResponseDto
-                {
-                    Id = oi.Id,
-                    Name = oi.Product.Name,
-                    ProductId = oi.ProductId,
-                    Quantity = oi.Quantity,
-                    UnitPrice = oi.UnitPrice
-                })]
-            };
+            var response = createdOrder.ToDto();
 
             return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, response);
         }

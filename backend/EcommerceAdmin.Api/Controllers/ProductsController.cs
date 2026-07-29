@@ -3,6 +3,7 @@ using EcommerceAdmin.Application.Interfaces;
 using EcommerceAdmin.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using EcommerceAdmin.Application.Common.Mappings;
 
 namespace EcommerceAdmin.Api.Controllers;
 
@@ -15,41 +16,24 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
     public async Task<IActionResult> GetAll()
     {
         var products = await productRepository.GetAllAsync();
-        var response = products.Select(p => new ProductResponseDto
-        {
-            Id = p.Id,
-            SKU = p.SKU,
-            Name = p.Name,
-            Price = p.Price,
-            CategoryId = p.CategoryId,
-            CategoryName = p.Category?.Title ?? "Unknown"
-        });
+        var response = products.Select(p => p.ToDto());
         return Ok(response);
     }
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
+    public async Task<IActionResult> GetAll([FromQuery] ProductParams productParams)
     {
         var (products, totalCount) = await productRepository.GetAllPaginatedAsync(
-            paginationParams.PageNumber, 
-            paginationParams.PageSize);
-        
-        var productDtos = products.Select(p => new ProductResponseDto
-        {
-            Id = p.Id,
-            SKU = p.SKU,
-            Name = p.Name,
-            Price = p.Price,
-            CategoryId = p.CategoryId,
-            CategoryName = p.Category?.Title ?? "Unknown" 
-        }).ToList();
+            productParams);
+
+        var productDtos = products.Select(p => p.ToDto()).ToList();
 
         var response = new PagedResult<ProductResponseDto>(
-            productDtos, 
-            totalCount, 
-            paginationParams.PageNumber, 
-            paginationParams.PageSize);
+            productDtos,
+            totalCount,
+            productParams.PageNumber,
+            productParams.PageSize);
 
         return Ok(response);
     }
@@ -62,15 +46,7 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
 
         if (product == null) return NotFound("Product not foud");
 
-        var response = new ProductResponseDto
-        {
-            Id = product.Id,
-            SKU = product.SKU,
-            Name = product.Name,
-            Price = product.Price,
-            CategoryId = product.CategoryId,
-            CategoryName = product.Category?.Title ?? "Unknown"
-        };
+        var response = product.ToDto();
 
         return Ok(response);
     }
@@ -98,15 +74,7 @@ public class ProductsController(IProductRepository productRepository, ICategoryR
 
         var createdProduct = await productRepository.AddAsync(newProduct);
 
-        var response = new ProductResponseDto
-        {
-            Id = createdProduct.Id,
-            SKU = createdProduct.SKU,
-            Name = createdProduct.Name,
-            Price = createdProduct.Price,
-            CategoryId = createdProduct.CategoryId,
-            CategoryName = "Will be populated on next fetch" 
-        };
+        var response = createdProduct.ToDto();
 
         // Returns 201 Created with the URL to fetch the new product
         return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, response);

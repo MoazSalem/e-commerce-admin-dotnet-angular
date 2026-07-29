@@ -1,3 +1,4 @@
+using EcommerceAdmin.Application.Common.Mappings;
 using EcommerceAdmin.Application.DTOs;
 using EcommerceAdmin.Application.Interfaces;
 using EcommerceAdmin.Domain.Entities;
@@ -15,7 +16,8 @@ public class CategoriesController(ICategoryRepository categoryRepository) : Cont
     public async Task<IActionResult> GetAll()
     {
         var categories = await categoryRepository.GetAllAsync();
-        return Ok(categories);
+        var response = categories.Select( c => c.ToDto());
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
@@ -23,11 +25,13 @@ public class CategoriesController(ICategoryRepository categoryRepository) : Cont
     public async Task<IActionResult> GetById(int id)
     {
         var category = await categoryRepository.GetByIdAsync(id);
-        
+
         if (category == null)
             return NotFound(new { Message = $"Category with Id {id} was not found." });
 
-        return Ok(category);
+        var response = category.ToDto();    
+
+        return Ok(response);
     }
 
     [HttpPost]

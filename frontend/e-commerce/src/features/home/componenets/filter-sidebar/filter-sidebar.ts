@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ShopFacade } from '../../../../core/services/shop-facade';
 
 @Component({
   selector: 'app-filter-sidebar',
@@ -8,4 +9,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './filter-sidebar.html',
   styleUrl: './filter-sidebar.css',
 })
-export class FilterSidebarComponent {}
+export class FilterSidebarComponent {
+  public facade = inject(ShopFacade);
+}

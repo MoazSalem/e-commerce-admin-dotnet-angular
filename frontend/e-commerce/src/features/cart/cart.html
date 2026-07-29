@@ -12,7 +12,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
       <!-- Left Column: Cart Items -->
-      <div class="lg:col-span-8">
+      <div class="lg:col-span-8" [class.lg:col-span-14]="cartItems().length == 0">
         <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
           @for (item of cartItems(); track item.productId) {
           <app-cart-item-card [item]="item" (updateQuantity)="handleUpdateQuantity($event)"

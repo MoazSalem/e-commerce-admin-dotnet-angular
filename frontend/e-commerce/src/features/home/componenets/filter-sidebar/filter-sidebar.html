@@ -5,38 +5,25 @@
     <div class="mb-8">
         <h4 class="text-xs font-bold text-gray-500 tracking-widest mb-4 uppercase">Categories</h4>
         <div class="space-y-3">
-            <label class="flex items-center space-x-3 cursor-pointer">
-                <input type="checkbox" checked
-                    class="w-5 h-5 rounded text-[#326e51] focus:ring-[#326e51] border-gray-300 accent-[#326e51]">
-                <span class="text-sm font-medium text-[#0b132b]">All Products</span>
-            </label>
-            @for (cat of ['Apparel', 'Electronics', 'Home & Living', 'Accessories']; track $index) {
-            <label class="flex items-center space-x-3 cursor-pointer">
-                <input type="checkbox"
-                    class="w-5 h-5 rounded text-[#326e51] focus:ring-[#326e51] border-gray-300 accent-[#326e51]">
-                <span class="text-sm font-medium text-gray-600 hover:text-[#0b132b]">{{ cat }}</span>
-            </label>
-            }
+           @if (facade.categoriesResource.value(); as categories) {
+                        @for (category of categories; track category.id) {
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox"
+                                [checked]="facade.categoryIds().includes(category.id)"
+                                (change)="facade.toggleCategory(category.id)"
+                                class="w-5 h-5 rounded text-[#326e51] focus:ring-[#326e51] border-gray-300 accent-[#326e51]">
+                            <span class="text-sm font-medium transition-colors hover:text-[#0b132b]"
+                                  [class.text-[#0b132b]]="facade.categoryIds().includes(category.id)"
+                                  [class.text-gray-600]="!facade.categoryIds().includes(category.id)">
+                                {{ category.title }}
+                            </span>
+                        </label>
+                        }
+                    }
         </div>
     </div>
 
-
-    <!-- Stock Status -->
-    <div class="mb-8">
-        <h4 class="text-xs font-bold text-gray-500 tracking-widest mb-4 uppercase">Stock Status</h4>
-        <label class="flex items-center cursor-pointer">
-            <label class="relative flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" checked>
-                <div class="block bg-gray-200 w-10 h-6 rounded-full transition-colors peer-checked:bg-blue-100"></div>
-                <div
-                    class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all shadow-sm peer-checked:translate-x-4 peer-checked:bg-[#326e51]">
-                </div>
-            </label>
-            <div class="ml-3 text-sm font-medium text-gray-900">In Stock Only</div>
-        </label>
-    </div>
-
-    <button
+    <button (click)="facade.clearCategories()"
         class="w-full border border-gray-300 text-gray-700 font-bold py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-sm">
         Clear All
     </button>

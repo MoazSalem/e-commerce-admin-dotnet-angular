@@ -19,10 +19,12 @@
                     <div class="flex items-center space-x-2 text-sm font-medium">
                         <span class="text-gray-500">Sort by:</span>
                         <select
+                            (change)="shopfacade.changeSort($event)" [value]="shopfacade.currentSort() || ''"
                             class="bg-white border border-gray-200 rounded-lg py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-100 font-bold text-[#0b132b]">
-                            <option>Newest Arrivals</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
+                            <option value="">Name (A-Z)</option>
+                            <option value="nameDesc">Name (Z-A)</option>
+                            <option value="priceAsc">Price (Low to High)</option>
+                            <option value="priceDesc">Price (High to Low)</option>
                         </select>
                     </div>
                 </div>
@@ -48,8 +50,9 @@
                     }
                 </div>
                 }
-                
-                <app-pagination-component [metadata]="PaginatedResults" (pageChange)="shopfacade.changePage($event)"></app-pagination-component>
+
+                <app-pagination-component [metadata]="PaginatedResults"
+                    (pageChange)="shopfacade.changePage($event)"></app-pagination-component>
 
             </div>
             }
