@@ -69,7 +69,8 @@ public class AuthController(UserManager<User> userManager, ITokenService tokenSe
             Token = token,
             RefreshToken = refreshToken,
             Email = user.Email!,
-            Name = user.Name
+            Name = user.Name,
+            Role = roles.FirstOrDefault() ?? "User"
         });
     }
 
@@ -112,7 +113,8 @@ public class AuthController(UserManager<User> userManager, ITokenService tokenSe
             Token = newJwtToken,
             RefreshToken = newRefreshToken,
             Email = user.Email!,
-            Name = user.Name
+            Name = user.Name,
+             Role = roles.FirstOrDefault() ?? "User"
         });
     }
 }

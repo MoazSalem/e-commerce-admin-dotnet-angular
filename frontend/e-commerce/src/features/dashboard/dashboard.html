@@ -1,0 +1,65 @@
+<app-header-component></app-header-component>
+<div class="flex min-h-[90vh] bg-[#f8fafc] font-sans">
+
+    <!-- Fixed Sidebar -->
+    <app-sidebar-component></app-sidebar-component>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-10 max-w-full">
+
+        <!-- Metrics Grid -->
+         @if(dashboardService.statsResource.value(); as metrics){
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+            <!-- Total Sales -->
+            <app-stat-card-component title="Total Sales" [value]="(metrics.totalSales | currency:'USD':'symbol':'1.0-0') || ''"
+                [trendLabel]="'+' + metrics.salesTrend + '%'" trendIcon="up" iconBgClass="bg-[#ebf0f9]"
+                trendBgClass="bg-[#e7f7ed]" trendTextClass="text-[#326e51]">
+                <svg class="w-5 h-5 text-[#3a5a99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </app-stat-card-component>
+
+            <!-- New Orders -->
+            <app-stat-card-component title="New Orders" [value]="(metrics.newOrders | number) || ''"
+                [trendLabel]="'+ ' + metrics.ordersTrend" trendBgClass="bg-[#e7f7ed]" trendTextClass="text-[#326e51]">
+                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+            </app-stat-card-component>
+
+            <!-- Active Users -->
+            <app-stat-card-component title="Active Users" [value]="(metrics.activeUsers | number) || ''"
+                [trendLabel]="metrics.usersTrend + '%'" trendIcon="down" iconBgClass="bg-orange-50"
+                trendBgClass="bg-red-50" trendTextClass="text-red-600">
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                    </path>
+                </svg>
+            </app-stat-card-component>
+
+            <!-- Net Revenue -->
+            <app-stat-card-component title="Net Revenue" [value]="(metrics.netRevenue | currency:'USD':'symbol':'1.0-0') || ''"
+                [trendLabel]="metrics.revenueTrendStatus" trendIcon="check" iconBgClass="bg-gray-100"
+                trendBgClass="bg-[#e7f7ed]" trendTextClass="text-[#326e51]">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+            </app-stat-card-component>
+
+        </div>
+         }
+
+
+        <!-- Recent Orders Table -->
+        @if (dashboardService.recentOrdersResource.value(); as recentOrders) {
+            <app-recent-orders-component [orders]="recentOrders"></app-recent-orders-component>
+        }
+
+    </main>
+</div>

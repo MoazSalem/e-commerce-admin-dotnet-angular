@@ -4,7 +4,10 @@
             <div class="text-3xl font-extrabold text-[#0b132b] pb-2 tracking-tight">E-Store</div>
         </a>
         <nav class="hidden md:flex space-x-8 text-sm font-bold">
-          <a href="my-orders" class="text-gray-500">My Orders</a>
+            @if (user.role == "Admin") {
+            <a href="admin-dashboard" class="text-gray-500">Dashboard</a>
+            }
+            <a href="my-orders" class="text-gray-500">My Orders</a>
         </nav>
     </div>
 
@@ -39,8 +42,8 @@
             <!-- Avatar Trigger -->
             <button (click)="toggleDropdown()"
                 class="focus:outline-none flex items-center rounded-full ring-2 ring-transparent hover:ring-blue-100 transition-all">
-                <img src="https://ui-avatars.com/api/?name={{getNameForAvatar(user.name)}}&background=e2e8f0" alt="Profile"
-                    class="w-9 h-9 rounded-full border border-gray-200">
+                <img src="https://ui-avatars.com/api/?name={{getNameForAvatar(user.name)}}&background=e2e8f0"
+                    alt="Profile" class="w-9 h-9 rounded-full border border-gray-200">
             </button>
 
             @if (isDropdownOpen()) {
