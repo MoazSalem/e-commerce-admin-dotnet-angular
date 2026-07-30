@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { environment } from '../../environments/environment.development';
 import { DashboardMetrics, RecentOrder } from '../../shared/models/dashboard';
+import { PaginatedResult } from '../../shared/models/pagination';
 
 @Injectable({
   providedIn: 'root',
@@ -20,4 +21,26 @@ export class DashboardService {
   public readonly recentOrdersResource = rxResource({
     stream: () => this.http.get<RecentOrder[]>(`${this.apiUrl}Dashboard/recent-orders`)
   });
+
+  public pageNumber = signal(1);
+  public pageSize = signal(10);
+
+  // Full Paginated Orders Resource
+  public readonly paginatedOrdersResource = rxResource({
+    params: () => ({
+      pageNumber: this.pageNumber(),
+      pageSize: this.pageSize(),
+    }),
+    stream: ({ params }) => {
+      let httpParams = new HttpParams()
+        .set('pageNumber', params.pageNumber)
+        .set('pageSize', params.pageSize);
+
+      return this.http.get<PaginatedResult<RecentOrder>>(`${this.apiUrl}Dashboard/orders`, { params:httpParams });
+    }
+  });
+
+  public changePage(newPage: number) {
+    this.pageNumber.set(newPage);
+  }
 }

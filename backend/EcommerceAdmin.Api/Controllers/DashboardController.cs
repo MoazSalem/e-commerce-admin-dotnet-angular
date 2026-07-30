@@ -1,3 +1,4 @@
+using EcommerceAdmin.Application.DTOs;
 using EcommerceAdmin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +23,21 @@ public class DashboardController(IDashboardRepository dashboardRepository) : Con
     {
         var recentOrders = await dashboardRepository.GetRecentOrdersAsync(5);
         return Ok(recentOrders);
+    }
+
+    [HttpGet("orders")]
+    public async Task<IActionResult> GetPaginatedOrders([FromQuery] PaginationParams paginationParams)
+    {
+        var (items, totalCount) = await dashboardRepository.GetPaginatedOrdersAsync(
+            paginationParams.PageNumber, 
+            paginationParams.PageSize);
+
+        var response = new PagedResult<RecentOrderDto>(
+            [.. items], 
+            totalCount, 
+            paginationParams.PageNumber, 
+            paginationParams.PageSize);
+
+        return Ok(response);
     }
 }

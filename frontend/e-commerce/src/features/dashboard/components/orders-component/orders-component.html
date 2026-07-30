@@ -1,0 +1,72 @@
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col font-sans">
+
+
+  @if (this.dashboard.paginatedOrdersResource.value(); as paginatedResults) {
+  <!-- Table Wrapper -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+
+      <!-- Table Header -->
+      <thead>
+        <tr class="bg-[#f4f7fb] border-b border-gray-200">
+          <th class="py-4 px-8 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">Order
+            ID</th>
+          <th class="py-4 px-8 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">
+            Customer Name</th>
+          <th class="py-4 px-8 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">Date
+          </th>
+          <th class="py-4 px-8 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">Total
+            Amount</th>
+        </tr>
+      </thead>
+
+      @if(paginatedResults.items; as orders){
+      <!-- Table Body -->
+      <tbody>
+        @for (order of orders; track order.id) {
+        <tr class="border-b border-gray-100 last:border-0 hover:bg-[#f8fafc] transition-colors">
+
+          <!-- Order ID -->
+          <td class="py-3 px-4 text-sm font-medium ">
+            <div class="py-3 px-4 text-sm font-medium  text-gray-500 ">#ORD-{{ order.id }}</div>
+          </td>
+
+          <!-- Customer Name -->
+          <td class="py-5 px-8 text-sm font-medium text-[#0b132b]border-b border-gray-50">
+            {{ order.customerName }}
+          </td>
+
+          <!-- Date -->
+          <td class="py-5 px-8 text-sm font-medium text-gray-500 border-b border-gray-50">
+            {{ order.createdAt | date: 'medium' }}
+          </td>
+
+          <!-- Total Amount -->
+          <td class="py-5 px-10 text-sm font-medium text-[#0b132b] border-b border-gray-50">
+            {{ order.total | currency:'USD':'symbol':'1.2-2' }}
+          </td>
+
+        </tr>
+        }
+      </tbody>
+      }
+
+    </table>
+  </div>
+
+  <!-- Footer with Pagination -->
+  <div class="bg-[#f4f7fb] border-t border-gray-200 py-4 px-6 flex items-center justify-between">
+
+    <!-- Entries Info -->
+    <div class="text-[14px] text-gray-600 font-medium">
+      Showing 1 to 5 of 1,284 entries
+    </div>
+
+    <app-pagination-component [metadata]="paginatedResults"
+      (pageChange)="this.dashboard.changePage($event)"></app-pagination-component>
+
+  </div>
+  }
+
+
+</div>

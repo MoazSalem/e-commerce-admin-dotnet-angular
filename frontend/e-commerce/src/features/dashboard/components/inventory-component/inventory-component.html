@@ -9,11 +9,11 @@
 
             <!-- Table Header -->
             <thead>
-                <tr class="bg-[#f8fafc] border-b border-gray-200">
-                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">Product Name</th>
-                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">SKU</th>
-                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">Category</th>
-                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">Price</th>
+                <tr class="bg-[#f4f7fb] px-8 border-b border-gray-200 ">
+                    <th class="py-4 px-8 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">Product Name</th>
+                    <th class="py-4 px-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">SKU</th>
+                    <th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">Category</th>
+                    <th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100">Price</th>
                 </tr>
             </thead>
 
@@ -24,26 +24,26 @@
                 @for (item of inventory; track item.sku) {
                 <tr class="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
 
-                    <!-- Product Name & Subcategory -->
-                    <td class="py-5 px-6">
-                        <div class="font-semibold text-[#0b132b] text-base mb-1">{{ item.name }}</div>
+                    <!-- Product Name -->
+                    <td class="py-3 px-6">
+                        <div class="py-3 px-4 text-sm font-medium text-[#0b132b]">{{ item.name }}</div>
                     </td>
 
                     <!-- SKU -->
-                    <td class="py-5 px-6 text-[15px] text-gray-600 font-medium">
+                    <td class="py-3 px-4 text-sm font-medium text-gray-500 border-b border-gray-50">
                         {{ item.sku }}
                     </td>
 
                     <!-- Category Badge -->
-                    <td class="py-5 px-6">
+                    <td class="py-3 px-6">
                         <span
-                            class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-extrabold uppercase tracking-wider bg-[#eaf0ff] text-[#3b5ba5]">
+                            class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-[#eaf0ff] text-[#3b5ba5]">
                             {{ item.categoryName }}
                         </span>
                     </td>
 
                     <!-- Price -->
-                    <td class="py-5 px-6 text-[15px] font-extrabold text-[#0b132b]">
+                    <td class="py-3 px-6 text-[15px] font-bold text-[#0b132b]">
                         {{ item.price | currency:'USD':'symbol':'1.2-2' }}
                     </td>
 
@@ -57,10 +57,10 @@
     </div>
 
     <!-- Footer with Pagination -->
-    <div class="bg-[#f8fafc] border-t border-gray-200 py-4 px-6 flex items-center justify-between">
+    <div class="bg-[rgb(244,247,251)] border-t border-gray-200 py-4 px-6 flex items-center justify-between">
 
         <!-- Entries Info -->
-        <div class="text-[15px] text-gray-600 font-medium">
+        <div class="text-[14px] text-gray-600 font-medium">
             Showing {{((paginatedResults.pageNumber - 1) * (paginatedResults.pageSize) + 1)}} to
             {{Math.min(paginatedResults.pageNumber * paginatedResults.pageSize, paginatedResults.totalCount)}} of
             {{paginatedResults.totalCount}} entries

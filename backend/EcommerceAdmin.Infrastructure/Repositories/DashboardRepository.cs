@@ -75,4 +75,28 @@ public class DashboardRepository(AppDbContext context) : IDashboardRepository
         return await query.Take(count).ToListAsync();
     }
 
+    public async Task<(IEnumerable<RecentOrderDto> Items, int TotalCount)> GetPaginatedOrdersAsync(int pageNumber, int pageSize)
+    {
+        var query = from order in context.Orders
+                    join user in context.Set<User>() on order.UserId equals user.Id
+                    orderby order.CreatedAt descending
+                    select new RecentOrderDto
+                    {
+                        Id = order.Id,
+                        CustomerName = user.Name ?? user.UserName ?? "Unknown Customer",
+                        CreatedAt = order.CreatedAt,
+                        Total = order.Total
+                    };
+
+        var totalCount = await query.CountAsync();
+
+        // Grab just the page we need
+        var items = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+
 }

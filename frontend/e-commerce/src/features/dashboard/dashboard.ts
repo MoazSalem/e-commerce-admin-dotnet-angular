@@ -10,10 +10,11 @@ import { AddProductComponent } from './components/add-product-component/add-prod
 import { InventoryComponent } from "./components/inventory-component/inventory-component";
 import { ProductService } from '../../core/services/product-service';
 import { CreateProductDto } from '../../shared/models/product';
+import { OrdersComponent } from "./components/orders-component/orders-component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RecentOrdersComponent, StatCardComponent, SidebarComponent, CurrencyPipe, DecimalPipe, HeaderComponent, AddProductComponent, InventoryComponent],
+  imports: [RecentOrdersComponent, StatCardComponent, SidebarComponent, CurrencyPipe, DecimalPipe, HeaderComponent, AddProductComponent, InventoryComponent, OrdersComponent],
   templateUrl: './dashboard.html',
 })
 export class Dashboard {
