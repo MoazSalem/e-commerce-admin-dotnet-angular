@@ -71,6 +71,8 @@
         <app-add-product-component (cancel)="changeView('dashboard')" (productSaved)="handleProductSave($event)">
         </app-add-product-component>
 
+        } @else if (currentView() === 'inventory') {
+            <app-inventory-component></app-inventory-component>
         }
 
 

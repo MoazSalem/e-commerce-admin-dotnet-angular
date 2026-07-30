@@ -7,25 +7,34 @@ import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { HeaderComponent } from "../../layout/header-component/header-component";
 import { DashboardService } from '../../core/services/dashboard-service';
 import { AddProductComponent } from './components/add-product-component/add-product-component';
+import { InventoryComponent } from "./components/inventory-component/inventory-component";
+import { ProductService } from '../../core/services/product-service';
+import { CreateProductDto } from '../../shared/models/product';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RecentOrdersComponent, StatCardComponent, SidebarComponent, CurrencyPipe, DecimalPipe, HeaderComponent, AddProductComponent],
+  imports: [RecentOrdersComponent, StatCardComponent, SidebarComponent, CurrencyPipe, DecimalPipe, HeaderComponent, AddProductComponent, InventoryComponent],
   templateUrl: './dashboard.html',
 })
 export class Dashboard {
   protected dashboardService = inject(DashboardService);
+  private productService = inject(ProductService);
 
-  currentView = signal<'dashboard' | 'addProduct'>('dashboard');
 
-  changeView(view: 'dashboard' | 'addProduct') {
+  currentView = signal<'dashboard' | 'addProduct' | 'inventory' | 'orders'>('dashboard');
+
+  changeView(view: 'dashboard' | 'addProduct' | 'inventory' | 'orders') {
     this.currentView.set(view);
   }
 
   // Method to handle successful form submission
-  handleProductSave(dtoPayload: any) {
-    // Send to .NET Backend via HttpClient here
-    console.log('Sending payload to API:', dtoPayload);
+  handleProductSave(dtoPayload: CreateProductDto) {
+    this.productService.addProduct(dtoPayload).subscribe({
+      next: (response) => {
+        console.log('Success!', response);
+      },
+      error: (err) => console.error('Error adding product', err)
+    });
     
     // Return to dashboard after saving
     this.changeView('dashboard');

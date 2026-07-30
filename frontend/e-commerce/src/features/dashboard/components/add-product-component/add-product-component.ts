@@ -1,6 +1,5 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProductService } from '../../../../core/services/product-service';
 
 @Component({
   selector: 'app-add-product-component',
@@ -8,7 +7,6 @@ import { ProductService } from '../../../../core/services/product-service';
   templateUrl: './add-product-component.html',
 })
 export class AddProductComponent {
-  private productService = inject(ProductService);
   productForm: FormGroup;
   // Output events to communicate back to the dashboard layout
   cancel = output<void>();
@@ -27,12 +25,6 @@ export class AddProductComponent {
   onSubmit() {
     if (this.productForm.valid) {
       console.log('Dispatching DTO to backend:', this.productForm.value);
-      this.productService.addProduct(this.productForm.value).subscribe({
-      next: (response) => {
-        console.log('Success!', response);
-      },
-      error: (err) => console.error('Error adding product', err)
-    });
       this.productSaved.emit(this.productForm.value);
     }
   }

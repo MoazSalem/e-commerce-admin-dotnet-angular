@@ -14,5 +14,6 @@ import { PaginationComponent } from "../../shared/components/pagination-componen
   styleUrl: './home.css'
 })
 export class HomeComponent {
- protected shopfacade = inject(ShopFacade);
+  protected readonly Math = Math;
+  protected shopfacade = inject(ShopFacade);
 }

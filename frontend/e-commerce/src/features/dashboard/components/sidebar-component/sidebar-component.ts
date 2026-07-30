@@ -7,10 +7,10 @@ import { Component, input, output } from '@angular/core';
   templateUrl: './sidebar-component.html',
 })
 export class SidebarComponent {
-  activeView = input<'dashboard' | 'addProduct'>('dashboard');
-  viewChange = output<'dashboard' | 'addProduct'>();
+  activeView = input<'dashboard' | 'addProduct' | 'inventory' | 'orders'>('dashboard');
+  viewChange = output<'dashboard' | 'addProduct' | 'inventory' | 'orders'>();
 
-  navigateTo(view: 'dashboard' | 'addProduct') {
+  navigateTo(view: 'dashboard' | 'addProduct' | 'inventory' | 'orders') {
     this.viewChange.emit(view);
   }
 }

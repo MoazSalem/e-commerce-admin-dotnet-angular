@@ -14,8 +14,7 @@
                 <!-- Top Controls -->
                 <div class="flex justify-between items-center mb-6">
                     <span class="text-sm text-gray-500 font-medium">Showing
-                        {{PaginatedResults.items.length}} of
-                        {{PaginatedResults.totalCount}} products</span>
+                        {{((PaginatedResults.pageNumber - 1) * (PaginatedResults.pageSize) + 1)}} to {{Math.min(PaginatedResults.pageNumber * PaginatedResults.pageSize, PaginatedResults.totalCount)}} of {{PaginatedResults.totalCount}} </span>
                     <div class="flex items-center space-x-2 text-sm font-medium">
                         <span class="text-gray-500">Sort by:</span>
                         <select

@@ -1,0 +1,78 @@
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col font-sans">
+
+
+
+    @if (productService.productsResource.value(); as paginatedResults) {
+    <!-- Table Wrapper -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+
+            <!-- Table Header -->
+            <thead>
+                <tr class="bg-[#f8fafc] border-b border-gray-200">
+                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">Product Name</th>
+                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">SKU</th>
+                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">Category</th>
+                    <th class="py-4 px-6 text-[15px] font-bold text-[#0b132b]">Price</th>
+                </tr>
+            </thead>
+
+            @if (productService.productsResource.value()?.items; as inventory) {
+
+            <!-- Table Body -->
+            <tbody>
+                @for (item of inventory; track item.sku) {
+                <tr class="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
+
+                    <!-- Product Name & Subcategory -->
+                    <td class="py-5 px-6">
+                        <div class="font-semibold text-[#0b132b] text-base mb-1">{{ item.name }}</div>
+                    </td>
+
+                    <!-- SKU -->
+                    <td class="py-5 px-6 text-[15px] text-gray-600 font-medium">
+                        {{ item.sku }}
+                    </td>
+
+                    <!-- Category Badge -->
+                    <td class="py-5 px-6">
+                        <span
+                            class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-extrabold uppercase tracking-wider bg-[#eaf0ff] text-[#3b5ba5]">
+                            {{ item.categoryName }}
+                        </span>
+                    </td>
+
+                    <!-- Price -->
+                    <td class="py-5 px-6 text-[15px] font-extrabold text-[#0b132b]">
+                        {{ item.price | currency:'USD':'symbol':'1.2-2' }}
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+            }
+
+
+        </table>
+    </div>
+
+    <!-- Footer with Pagination -->
+    <div class="bg-[#f8fafc] border-t border-gray-200 py-4 px-6 flex items-center justify-between">
+
+        <!-- Entries Info -->
+        <div class="text-[15px] text-gray-600 font-medium">
+            Showing {{((paginatedResults.pageNumber - 1) * (paginatedResults.pageSize) + 1)}} to
+            {{Math.min(paginatedResults.pageNumber * paginatedResults.pageSize, paginatedResults.totalCount)}} of
+            {{paginatedResults.totalCount}} entries
+        </div>
+
+        <div class="flex items-center">
+            <app-pagination-component [metadata]="paginatedResults"
+                (pageChange)="productService.changePage($event)"></app-pagination-component>
+        </div>
+    </div>
+
+    }
+
+
+</div>
