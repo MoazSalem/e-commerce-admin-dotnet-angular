@@ -1,9 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Product } from '../../shared/models/product';
+import { CreateProductDto, Product } from '../../shared/models/product';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { PaginatedResult } from '../../shared/models/pagination';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class ProductService {
 
       if (params.categoryIds && params.categoryIds.length > 0) {
         params.categoryIds.forEach(id => {
-        httpParams = httpParams.append('categoryIds', id);
+          httpParams = httpParams.append('categoryIds', id);
         })
       }
 
@@ -44,6 +45,8 @@ export class ProductService {
     }
   });
 
+  
+
   public reloadProducts(): void {
     this.productsResource.reload();
   }
@@ -52,9 +55,9 @@ export class ProductService {
     this.pageNumber.set(newPage);
   }
 
-   public toggleCategory(categoryId: number) {
+  public toggleCategory(categoryId: number) {
     this.pageNumber.set(1); // Reset to page 1 when filtering
-    
+
     this.categoryIds.update(ids => {
       // If it's already selected, remove it. Otherwise, add it.
       if (ids.includes(categoryId)) {
@@ -73,6 +76,15 @@ export class ProductService {
   public changeSort(sort: string) {
     this.pageNumber.set(1); // Reset to page 1 when sorting
     this.sort.set(sort);
+  }
+
+  public addProduct(productData: CreateProductDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}Products`, productData).pipe(
+      tap(() => {
+        // Automatically refresh the products grid when the upload succeeds!
+        this.productsResource.reload();
+      })
+    );
   }
 
 }

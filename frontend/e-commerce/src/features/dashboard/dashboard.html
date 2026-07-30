@@ -2,17 +2,20 @@
 <div class="flex min-h-[90vh] bg-[#f8fafc] font-sans">
 
     <!-- Fixed Sidebar -->
-    <app-sidebar-component></app-sidebar-component>
+    <app-sidebar-component [activeView]="currentView()" (viewChange)="changeView($event)">></app-sidebar-component>
 
     <!-- Main Content Area -->
     <main class="flex-1 p-10 max-w-full">
 
+        @if (currentView() === 'dashboard') {
+
         <!-- Metrics Grid -->
-         @if(dashboardService.statsResource.value(); as metrics){
+        @if(dashboardService.statsResource.value(); as metrics){
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
             <!-- Total Sales -->
-            <app-stat-card-component title="Total Sales" [value]="(metrics.totalSales | currency:'USD':'symbol':'1.0-0') || ''"
+            <app-stat-card-component title="Total Sales"
+                [value]="(metrics.totalSales | currency:'USD':'symbol':'1.0-0') || ''"
                 [trendLabel]="'+' + metrics.salesTrend + '%'" trendIcon="up" iconBgClass="bg-[#ebf0f9]"
                 trendBgClass="bg-[#e7f7ed]" trendTextClass="text-[#326e51]">
                 <svg class="w-5 h-5 text-[#3a5a99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,7 +46,8 @@
             </app-stat-card-component>
 
             <!-- Net Revenue -->
-            <app-stat-card-component title="Net Revenue" [value]="(metrics.netRevenue | currency:'USD':'symbol':'1.0-0') || ''"
+            <app-stat-card-component title="Net Revenue"
+                [value]="(metrics.netRevenue | currency:'USD':'symbol':'1.0-0') || ''"
                 [trendLabel]="metrics.revenueTrendStatus" trendIcon="check" iconBgClass="bg-gray-100"
                 trendBgClass="bg-[#e7f7ed]" trendTextClass="text-[#326e51]">
                 <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,13 +57,23 @@
             </app-stat-card-component>
 
         </div>
-         }
+        }
 
 
         <!-- Recent Orders Table -->
         @if (dashboardService.recentOrdersResource.value(); as recentOrders) {
-            <app-recent-orders-component [orders]="recentOrders"></app-recent-orders-component>
+        <app-recent-orders-component [orders]="recentOrders"></app-recent-orders-component>
         }
+
+        } @else if (currentView() === 'addProduct') {
+
+        <!-- Mount Add Product Form -->
+        <app-add-product-component (cancel)="changeView('dashboard')" (productSaved)="handleProductSave($event)">
+        </app-add-product-component>
+
+        }
+
+
 
     </main>
 </div>
